@@ -8,12 +8,12 @@ namespace TwoPC
 {
     public class TransactionManager
     {
-        public void PerformTwoPhaseCommit(List<Tuple<PostgresProxy, string>> nodesWithQueries)
+        public void PerformTwoPhaseCommit(List<KeyValuePair<PostgresProxy, string>> nodesWithQueries)
         {
             Console.WriteLine("Opening connections");
             foreach(var node in nodesWithQueries)
             {
-                node.Item1.OpenConnection();
+                node.Key.OpenConnection();
             }
             Console.WriteLine("Connections opened");
 
@@ -23,11 +23,11 @@ namespace TwoPC
             Console.WriteLine("Preparing transactions");
             foreach (var node in nodesWithQueries)
             {
-                var resultOfStart = node.Item1.PrepareTransaction(node.Item2, i++.ToString());
+                var resultOfStart = node.Key.PrepareTransaction(node.Value, i++.ToString());
 
                 if (resultOfStart)
                 {
-                    succeded.Add(node.Item1);
+                    succeded.Add(node.Key);
                 }
                 else
                 {
@@ -56,7 +56,7 @@ namespace TwoPC
             Console.WriteLine("Closing connections");
             foreach(var node in nodesWithQueries)
             {
-                node.Item1.CloseConnection();
+                node.Key.CloseConnection();
             }
         }
     }
