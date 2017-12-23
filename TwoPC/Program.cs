@@ -9,6 +9,7 @@ namespace TwoPC
         public static Tuple<PostgresProxy, string> getFirstAction()
         {
             var firstPostgresProxy = new PostgresProxy("localhost", "5432", "postgres", "69916010", "FlyBooking");
+            firstPostgresProxy.InErrorMode = true;
             var insertForFirst = queryBuilder.GetInsertScript("flybooking", new List<string>()
             {
                 "clientname",
@@ -31,7 +32,6 @@ namespace TwoPC
         public static Tuple<PostgresProxy, string> getSecondAction()
         {
             var secondPostgresConnection = new PostgresProxy("localhost", "5432", "postgres", "69916010", "HotelBooking");
-
             var insertForSecond = queryBuilder.GetInsertScript("HotelBooking", new List<string>()
             {
                 "clientname",
@@ -53,7 +53,6 @@ namespace TwoPC
         public static Tuple<PostgresProxy, string> getThirdAction()
         {
             var thirdPostgresConnection = new PostgresProxy("localhost", "5432", "postgres", "69916010", "Account");
-
             var insertForThird = "UPDATE accounts SET amount = amount - 6";
             return new Tuple<PostgresProxy, string>(thirdPostgresConnection, insertForThird);
         }

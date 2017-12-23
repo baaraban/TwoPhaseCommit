@@ -5,6 +5,7 @@ namespace TwoPC
 {
     public class PostgresProxy
     {
+        public bool InErrorMode = false;
         private const string connectionTemplate = "Server={0}; Port = {1}; User Id = {2}; Password = {3}; Database={4}";
         private string currentTransactionName;
         private string connectionString;
@@ -43,6 +44,11 @@ namespace TwoPC
 
         public void RollbackCurrentTransaction()
         {
+            if (InErrorMode)
+            {
+                Console.WriteLine("{0} is in error mode. No rollback", this.connectionString);
+                return;
+            }
             if (String.IsNullOrEmpty(this.currentTransactionName))
             {
                 Console.WriteLine("No transaction on {0}", this.connectionString);
@@ -56,6 +62,11 @@ namespace TwoPC
 
         public void CommitCurrentTransaction()
         {
+            if (InErrorMode)
+            {
+                Console.WriteLine("{0} is in error mode. No rollback", this.connectionString);
+                return;
+            }
             if (String.IsNullOrEmpty(this.currentTransactionName))
             {
                 Console.WriteLine("No transaction on {0}", this.connectionString);
